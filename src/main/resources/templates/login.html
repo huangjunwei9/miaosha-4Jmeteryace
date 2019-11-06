@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>登录</title>
+
+    <!--bootstrap-->
+        <!--<link rel="stylesheet" href="https://cdn.bootcss.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">-->
+        <!--<script src="https://cdn.bootcss.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>-->
+    <script type="text/javascript" th:src="@{/bootstrap-4.0.0-dist/js/bootstrap.js}"></script>
+    <link rel="stylesheet" type="text/css" th:href="@{/bootstrap-4.0.0-dist/css/bootstrap.css}" />
+    <!--jquery.js-->
+    <script type="text/javascript" th:src="@{/js/jquery-3.4.1.min.js}"></script>
+    <!--jquery-validation-1.14.0 注意：在引入jquery.validate之前一定要先引入jquery，因为jquery是jquery.validate的基础-->
+    <script type="text/javascript" th:src="@{/jquery-validation-1.14.0/dist/jquery.validate.js}"></script>
+    <script type="text/javascript" th:src="@{/jquery-validation-1.14.0/dist/localization/messages_zh.js}"></script>
+    <!--layer.js-->
+    <script type="text/javascript" th:src="@{/layer/layer.js}"></script>
+    <!--md5.js-->
+    <script type="text/javascript" th:src="@{/js/md5npm.js}"></script>
+    <!--common.js-->
+    <script type="text/javascript" th:src="@{/js/common.js}"></script>
+
+</head>
+<body>
+
+    <form name = "loginForm" id = "loginForm" method = "post" style="width:50%; margin:0 auto">
+        <h2 style="text-align:center;margin-bottom:20px">用户登录</h2>
+        <div class="form-group">
+            <div class="row">
+                <label class="col-form-label col-md-4">
+                    请输入手机号码
+                </label>
+
+                <div class="col-md-5">
+                    <input id="mobile" name="mobile" class="form-control" type="text" placeholder="手机号码" required="true" minlength="6" maxlength="11"/>
+                </div>
+
+                <div class="col-md-1">
+                </div>
+            </div>
+        </div>
+
+
+        <div class="form-group">
+            <div class="row">
+                <label class="col-form-label col-md-4">
+                    请输入密码
+                </label>
+
+                <div class="col-md-5">
+                    <input id="password" name="password" class="form-control" type="password" placeholder="手机号码" required="true" minlength="6" maxlength="6"/>
+                </div>
+
+                <div class="col-md-1">
+                </div>
+            </div>
+        </div>
+
+
+        <div class="row">
+            <div class="col-md-5">
+                <button class="btn btn-primary btn-block" type="reset" onclick="reset()">重置</button>
+            </div>
+
+            <div class="col-md-5">
+                <button class="btn btn-primary btn-block" type="submit" onclick="login()">登录</button>
+            </div>
+        </div>
+
+    </form>
+
+</body>
+
+<script>
+    function login() {
+        $("#loginForm").validate({
+            submitHandler:function(form){//验证通过则调用回调函数
+                // alert("提交登录事件!");
+                doLogin();
+            }
+        });
+
+    }
+
+    function doLogin() {
+        g_showLoading();//显示加载框
+
+        var intputPass = $("#password").val();//获取输入的明文密码
+        var salt = g_password_salt; //明文密码的salt
+        var str = "" + salt.charAt(0) + salt.charAt(2) +  intputPass  + salt.charAt(5)  + salt.charAt(4); //制定MD5组合规则 12 密码 c3
+        var password = md5(str);
+        console.log(password);
+
+        $.ajax({
+            url:"/login/do_login",
+            type:"POST",
+            data:{
+                mobile:$("#mobile").val(),
+                password:password
+            },
+            success:function(data){
+                layer.closeAll();
+                if(data.data.code == 0){
+                    layer.msg(data.data.msg);
+                    window.location.href="/goods/to_list";
+                }else{
+                    layer.msg(data.data.msg);
+                }
+                console.log(data.data.msg);
+            },
+            error:function() {
+                layer.closeAll();
+            }
+        })
+    }
+</script>
+
+
+
+
+
+</html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

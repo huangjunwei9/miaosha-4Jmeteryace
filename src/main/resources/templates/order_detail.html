@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>订单详情</title>
+
+    <!--bootstrap-->
+    <!--<link rel="stylesheet" href="https://cdn.bootcss.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">-->
+    <!--<script src="https://cdn.bootcss.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>-->
+    <script type="text/javascript" th:src="@{/bootstrap-4.0.0-dist/js/bootstrap.js}"></script>
+    <link rel="stylesheet" type="text/css" th:href="@{/bootstrap-4.0.0-dist/css/bootstrap.css}" />
+    <!--jquery.js-->
+    <script type="text/javascript" th:src="@{/js/jquery-3.4.1.min.js}"></script>
+    <!--jquery-validation-1.14.0 注意：在引入jquery.validate之前一定要先引入jquery，因为jquery是jquery.validate的基础-->
+    <script type="text/javascript" th:src="@{/jquery-validation-1.14.0/dist/jquery.validate.js}"></script>
+    <script type="text/javascript" th:src="@{/jquery-validation-1.14.0/dist/localization/messages_zh.js}"></script>
+    <!--layer.js-->
+    <script type="text/javascript" th:src="@{/layer/layer.js}"></script>
+    <!--md5.js-->
+    <script type="text/javascript" th:src="@{/js/md5npm.js}"></script>
+    <!--common.js-->
+    <script type="text/javascript" th:src="@{/js/common.js}"></script>
+
+</head>
+<body>
+<div class="panel panel-default">
+    <div class = "panel-heading">秒杀订单详情</div>
+    <table class="table" id="goodsList">
+        <tr>
+            <td>商品名称</td>
+            <td colspan="3" th:text="${goods.goodsName}"></td>
+        </tr>
+        <tr>
+            <td>商品图片</td>
+            <td colspan="3"><img th:src="@{${goods.goodsImg}}" width="200" height="200" /></td>
+        </tr>
+        <tr>
+            <td>订单单价</td>
+            <td colspan="3" th:text="${orderInfo.goodsPrice}"></td>
+        </tr>
+        <tr>
+            <td>下单时间</td>
+            <td colspan="3" th:text="${#dates.format(orderInfo.createDate,'yyy-MM-dd HH:mm:ss')}"></td>
+        </tr>
+        <tr>
+            <td>订单状态</td>
+            <td>
+                <span th:if="${orderInfo.status} == 0">未支付</span>
+                <span th:if="${orderInfo.status} == 1">已支付，待发货</span>
+                <span th:if="${orderInfo.status} == 2">已发货</span>
+                <span th:if="${orderInfo.status} == 3">已收货</span>
+                <span th:if="${orderInfo.status} == 4">已退款</span>
+                <span th:if="${orderInfo.status} == 5">已完成</span>
+            </td>
+            <td>
+                <button class="btn btn-primary btn-block" type="submit" id="payButton">立即支付</button>
+            </td>
+        </tr>
+        <tr>
+            <td>收货人</td>
+            <td colspan="3" th:text="'收货人姓名：' + ${user.nickname} + '   手机号：' + ${user.id}"></td>
+        </tr>
+        <tr>
+            <td>收货地址</td>
+            <td colspan="3" >中国石油大学华东</td>
+        </tr>
+    </table>
+</div>
+</body>
+</html>
